@@ -17,6 +17,10 @@ class Item(BaseModel):
     title: str
     description: Union[str, None] = None
 
+@app.get("/")
+async def read_root():
+    return {"Hello", "World"}
+
 @app.get("/items/{item_id}", response_model=Item)
 async def read_main(item_id: str, x_token: Annotated[str, Header()]):
     if x_token != fake_secret_token:
