@@ -1,0 +1,30 @@
+on:
+  push:
+    branches: [stage, main]
+
+jobs: 
+  stage:
+    if: ${{ github.ref == 'refs/heads/stage' || github.base_ref == 'stage' }}
+    uses: ./.github/workflows/_deployment.yaml
+    permissions: 
+      id-token: write
+      contents: read
+    with: 
+      environment: 'stage'
+      ref: ${{ github.sha }}
+    secrets:
+      WI_PROVIDER: ${{ secrets.WI_PROVIDER }}
+      WIF_SA: ${{ secrets.WIF_SA }}
+  production: 
+    if: ${{ github.ref == 'refs/heads/main' || github.base_ref == 'main' }}
+    uses: ./.github/workflows/_deployment.yaml
+    permissions: 
+      id-token: write
+      contents: read
+    with:
+      environment: 'production'
+      ref: ${{ github.sha }}
+    # secrets: inherit
+    secrets:
+      WI_PROVIDER: ${{ secrets.WI_PROVIDER }}
+      WIF_SA: ${{ secrets.WIF_SA }}
